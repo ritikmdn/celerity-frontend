@@ -74,20 +74,20 @@ const Command = Extension.create({
 const getSuggestionItems = ({ query }: { query: string }) => {
   return [
     {
-      title: "Continue writing",
-      description: "Use AI to expand your thoughts.",
+      title: "Sense check",
+      description: "Use AI to verify your text.",
       searchTerms: ["gpt"],
       icon: <Magic className="w-7 text-black" />,
     },
-    {
-      title: "Send Feedback",
-      description: "Let us know how we can improve.",
-      icon: <MessageSquarePlus size={18} />,
-      command: ({ editor, range }: CommandProps) => {
-        editor.chain().focus().deleteRange(range).run();
-        window.open("/feedback", "_blank");
-      },
-    },
+    // {
+    //   title: "Send Feedback",
+    //   description: "Let us know how we can improve.",
+    //   icon: <MessageSquarePlus size={18} />,
+    //   command: ({ editor, range }: CommandProps) => {
+    //     editor.chain().focus().deleteRange(range).run();
+    //     window.open("/feedback", "_blank");
+    //   },
+    // },
     {
       title: "Text",
       description: "Just start typing with plain text.",
@@ -255,7 +255,7 @@ const CommandList = ({
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const { complete, isLoading } = useCompletion({
-    id: "novel",
+    id: "celerity",
     api: "/api/generate",
     onResponse: (response) => {
       if (response.status === 429) {
@@ -284,7 +284,7 @@ const CommandList = ({
         command: item.title,
       });
       if (item) {
-        if (item.title === "Continue writing") {
+        if (item.title === "Sense check") {
           // we're using this for now until we can figure out a way to stream markdown text with proper formatting: https://github.com/steven-tey/novel/discussions/7
           complete(editor.getText());
           // complete(editor.storage.markdown.getMarkdown());

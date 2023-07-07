@@ -11,6 +11,7 @@ import {
 
 import { NodeSelector } from "./node-selector";
 import { ColorSelector } from "./color-selector";
+import { SenseCheckSelector } from "./sense-check";
 
 export interface BubbleMenuItem {
   name: string;
@@ -79,8 +80,11 @@ export const EditorBubbleMenu: FC<EditorBubbleMenuProps> = (props) => {
   return (
     <BubbleMenu
       {...bubbleMenuProps}
-      className="flex overflow-hidden rounded border border-stone-200 bg-white shadow-xl"
+      className="flex w-auto divide-x divide-stone-200 rounded border border-stone-200 bg-white shadow-xl"
     >
+      <SenseCheckSelector
+        editor={props.editor}
+      />
       <NodeSelector
         editor={props.editor}
         isOpen={isNodeSelectorOpen}
@@ -89,7 +93,7 @@ export const EditorBubbleMenu: FC<EditorBubbleMenuProps> = (props) => {
           setIsColorSelectorOpen(false);
         }}
       />
-
+      <div>
       {items.map((item, index) => (
         <button
           key={index}
@@ -103,6 +107,7 @@ export const EditorBubbleMenu: FC<EditorBubbleMenuProps> = (props) => {
           />
         </button>
       ))}
+      </div>
       <ColorSelector
         editor={props.editor}
         isOpen={isColorSelectorOpen}
