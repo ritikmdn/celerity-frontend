@@ -71,6 +71,7 @@ export const EditorBubbleMenu: FC<EditorBubbleMenuProps> = (props) => {
         setIsNodeSelectorOpen(false);
         setIsColorSelectorOpen(false);
       },
+    maxWidth: 'none', // set the maxWidth to none
     },
   };
 
@@ -80,7 +81,7 @@ export const EditorBubbleMenu: FC<EditorBubbleMenuProps> = (props) => {
   return (
     <BubbleMenu
       {...bubbleMenuProps}
-      className="flex w-auto divide-x divide-stone-200 rounded border border-stone-200 bg-white shadow-xl"
+      className="flex w-auto max-w-5xl divide-x divide-stone-200 rounded border border-stone-200 bg-white shadow-xl"
     >
       <SenseCheckSelector
         editor={props.editor}

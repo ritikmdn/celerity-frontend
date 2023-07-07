@@ -73,12 +73,12 @@ const Command = Extension.create({
 
 const getSuggestionItems = ({ query }: { query: string }) => {
   return [
-    {
-      title: "Sense check",
-      description: "Use AI to verify your text.",
-      searchTerms: ["gpt"],
-      icon: <Magic className="w-7 text-black" />,
-    },
+    // {
+    //   title: "Sense check",
+    //   description: "Use AI to verify your text.",
+    //   searchTerms: ["gpt"],
+    //   icon: <Magic className="w-7 text-black" />,
+    // },
     // {
     //   title: "Send Feedback",
     //   description: "Let us know how we can improve.",
@@ -254,28 +254,28 @@ const CommandList = ({
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const { complete, isLoading } = useCompletion({
-    id: "celerity",
-    api: "/api/generate",
-    onResponse: (response) => {
-      if (response.status === 429) {
-        toast.error("You have reached your request limit for the day.");
-        va.track("Rate Limit Reached");
-        return;
-      }
-      editor.chain().focus().deleteRange(range).run();
-    },
-    onFinish: (_prompt, completion) => {
-      // highlight the generated text
-      editor.commands.setTextSelection({
-        from: range.from,
-        to: range.from + completion.length,
-      });
-    },
-    onError: () => {
-      toast.error("Something went wrong.");
-    },
-  });
+  // const { complete, isLoading } = useCompletion({
+  //   id: "celerity",
+  //   api: "/api/generate",
+  //   onResponse: (response) => {
+  //     if (response.status === 429) {
+  //       toast.error("You have reached your request limit for the day.");
+  //       va.track("Rate Limit Reached");
+  //       return;
+  //     }
+  //     editor.chain().focus().deleteRange(range).run();
+  //   },
+  //   onFinish: (_prompt, completion) => {
+  //     // highlight the generated text
+  //     editor.commands.setTextSelection({
+  //       from: range.from,
+  //       to: range.from + completion.length,
+  //     });
+  //   },
+  //   onError: () => {
+  //     toast.error("Something went wrong.");
+  //   },
+  // });
 
   const selectItem = useCallback(
     (index: number) => {
@@ -284,16 +284,16 @@ const CommandList = ({
         command: item.title,
       });
       if (item) {
-        if (item.title === "Sense check") {
-          // we're using this for now until we can figure out a way to stream markdown text with proper formatting: https://github.com/steven-tey/novel/discussions/7
-          complete(editor.getText());
-          // complete(editor.storage.markdown.getMarkdown());
-        } else {
+        // if (item.title === "Sense check") {
+        //   // we're using this for now until we can figure out a way to stream markdown text with proper formatting: https://github.com/steven-tey/novel/discussions/7
+        //   complete(editor.getText());
+        //   // complete(editor.storage.markdown.getMarkdown());
+        // } else {
           command(item);
-        }
+        // }
       }
     },
-    [complete, command, editor, items],
+    [command, editor, items],
   );
 
   useEffect(() => {
@@ -352,7 +352,7 @@ const CommandList = ({
             onClick={() => selectItem(index)}
           >
             <div className="flex h-10 w-10 items-center justify-center rounded-md border border-stone-200 bg-white">
-              {item.title === "Continue writing" && isLoading ? (
+              {item.title === "Continue writing" ? (
                 <LoadingCircle />
               ) : (
                 item.icon
