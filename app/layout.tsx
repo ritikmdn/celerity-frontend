@@ -3,7 +3,7 @@ import "@/styles/prosemirror.css";
 
 import cx from "classnames";
 import { cal, inter } from "@/styles/fonts";
-import { Analytics } from "@vercel/analytics/react";
+// import { Analytics } from "@vercel/analytics/react";
 import { Metadata } from "next";
 import Toaster from "./toaster";
 import { ReactNode } from "react";
@@ -13,7 +13,7 @@ const title =
 const description =
   "Celerity is an AI sense checker that ensures what you write is coherent with your project data.";
 
-const metadata: Metadata = {
+export const metadata: Metadata = {
   title,
   description,
   openGraph: {
@@ -35,7 +35,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <Toaster />
       <body className={cx(cal.variable, inter.variable)}>{children}</body>
-      <Analytics />
+      {/* <Analytics /> */}
     </html>
   );
 }

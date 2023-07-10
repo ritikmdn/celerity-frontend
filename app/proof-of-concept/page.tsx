@@ -3,7 +3,7 @@ import Sensechecker from "@/ui/sensecheck";
 import Sidebar from "@/ui/sidebar";
 import LogoutButton from '@/ui/logout'
 import {
-  createServerActionClient,
+  // createServerActionClient,
   createServerComponentClient,
 } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
@@ -23,12 +23,12 @@ export default async function Page() {
     redirect('/login')
   }
 
-  const signOut = async () => {
-    'use server'
-    const supabase = createServerActionClient({ cookies })
-    await supabase.auth.signOut()
-    redirect('/login')
-  }
+  // const signOut = async () => {
+  //   'use server'
+  //   const supabase = createServerActionClient({ cookies })
+  //   await supabase.auth.signOut()
+  //   redirect('/login')
+  // }
 
 //   return (
 //     <div className="flex min-h-screen flex-row items-start justify-between sm:px-[2%] sm:py-[2%]">
