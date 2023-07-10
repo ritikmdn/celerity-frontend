@@ -11,7 +11,7 @@ import TaskList from "@tiptap/extension-task-list";
 import { Markdown } from "tiptap-markdown";
 import Highlight from "@tiptap/extension-highlight";
 
-import SlashCommand from "./slash-command";
+// import SlashCommand from "./slash-command";
 import { InputRule } from "@tiptap/core";
 
 export const TiptapExtensions = [
@@ -103,7 +103,7 @@ export const TiptapExtensions = [
     },
     includeChildren: true,
   }),
-  SlashCommand,
+  // SlashCommand,
   TiptapUnderline,
   TextStyle,
   Color,

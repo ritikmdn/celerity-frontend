@@ -4,7 +4,7 @@ import React from 'react'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import LogoSVG from './login/logo'
+import LogoSVG from './logo'
 // import Link from 'next/link'
 
 export default function Login() {
@@ -73,7 +73,7 @@ export default function Login() {
               value={password}
               placeholder="••••••••"
             />
-            {view === 'sign-in' && (
+            {view === "sign-in" && (
               <>
                 <button className="bg-red-500 rounded px-4 py-2 text-white mb-6">
                   Sign In
@@ -89,7 +89,7 @@ export default function Login() {
                 </p>
               </>
             )}
-            {view === 'sign-up' && (
+            {view === "sign-up" && (
               <>
                 <button className="bg-red-500 rounded px-4 py-2 text-white mb-6">
                   Sign Up
