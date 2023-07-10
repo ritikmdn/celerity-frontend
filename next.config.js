@@ -1,17 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    serverComponents: true,
+    concurrentFeatures: true,
+    serverActions: true,
+  },
   redirects: async () => {
     return [
-      {
-        source: "/github",
-        destination: "https://github.com/steven-tey/novel",
-        permanent: true,
-      },
-      {
-        source: "/feedback",
-        destination: "https://github.com/steven-tey/novel/issues",
-        permanent: true,
-      },
+      // {
+      //   source: "/github",
+      //   destination: "https://github.com/steven-tey/novel",
+      //   permanent: true,
+      // },
+      // {
+      //   source: "/feedback",
+      //   destination: "https://github.com/steven-tey/novel/issues",
+      //   permanent: true,
+      // },
       {
         source: "/deploy",
         destination: "https://vercel.com/templates/next.js/novel",

@@ -13,7 +13,7 @@ import {
 
 export default function DisplayBox() {
   const [content, setContent] = useState(null); // set initial content to null
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState<File[]>([]);
   const [indexStatus, setIndexStatus] = useState("");
   const [hydrated, setHydrated] = useState(false);
 
@@ -26,7 +26,7 @@ export default function DisplayBox() {
   // Handle file input change
   const handleFileChange = (e) => {
     const fileList = Array.from(e.target.files);
-    setFiles((prevFiles) => [...prevFiles, ...fileList]);
+    setFiles((prevFiles) => [...prevFiles, ...fileList] as File[]);
   };
 
   // Handle file remove
@@ -54,7 +54,7 @@ export default function DisplayBox() {
   }, []);
 
   return (
-    <div className="relative h-[92.5vh] w-[22.5%] border-stone-200 p-12 px-8 sm:mb-[calc(20vh)] sm:rounded-lg sm:border sm:px-4 sm:shadow-lg">
+    <div className="relative h-[87.5vh] w-[22.5%] border-stone-200 p-12 px-8 sm:mb-[calc(20vh)] sm:rounded-lg sm:border sm:px-4 sm:shadow-lg">
       {/* Add a file button */}
       <div className="absolute right-5 top-5 mb-5 rounded-lg bg-stone-100 px-2 py-1 text-sm text-stone-400">
         {indexStatus}
@@ -80,5 +80,4 @@ export default function DisplayBox() {
       </ul>
     </div>
 );
-
 }
