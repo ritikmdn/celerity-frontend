@@ -13,7 +13,7 @@ const title =
 const description =
   "Celerity is an AI sense checker that ensures what you write is coherent with your project data.";
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
   title,
   description,
   openGraph: {
