@@ -1,19 +1,30 @@
 import { Editor } from "@tiptap/core";
 import { FC, useState } from "react";
+import { useEffect, useRef, useContext } from "react";
 import { useCompletion } from "ai/react";
 import { toast } from "sonner";
 import va from "@vercel/analytics";
 import LoadingCircle from "@/ui/shared/loading-circle";
-import { Minimize } from "lucide-react";
 import Magic from "@/ui/shared/magic";
+import CompletionContext from '@/ui/aigrant/shared/context';
+import { useDebouncedCallback } from "use-debounce"; // import useDebouncedCallback
 
 interface SenseCheckSelectorProps {
   editor: Editor;
-  isOpen: boolean;
-  setIsOpen: () => void;
 }
 
-export const SenseCheckSelector = ({ editor }) => {
+export const SenseCheckSelector: FC<SenseCheckSelectorProps> = ({
+  editor,
+}) => {
+
+  const { completion, setCompletion } = useContext(CompletionContext)!; // access CompletionContext
+
+  // use debounce for setting completion
+  const debouncedSetCompletion = useDebouncedCallback((apicompletion) => {
+    setCompletion(apicompletion);
+    console.log('onFinish (debounced):', apicompletion);
+  }, 500);
+
   const { complete, isLoading } = useCompletion({
     id: "celerity",
     api: "/api/generate",
@@ -25,14 +36,12 @@ export const SenseCheckSelector = ({ editor }) => {
       }
       editor.chain().focus().run();
     },
-    onFinish: (_prompt, completion) => {
-      // highlight the generated text
-      const range = editor.state.selection;
-      editor.commands.setTextSelection({
-        from: range.from,
-        to: range.from + completion.length,
-      });
-    },
+    onFinish: (_prompt, apicompletion) => {
+      if (apicompletion !== "") {
+        console.log('onFinish:', apicompletion);
+        debouncedSetCompletion(apicompletion);
+      }
+    },         
     onError: () => {
       toast.error("Something went wrong.");
     },

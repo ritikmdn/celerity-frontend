@@ -18,7 +18,7 @@ const DEFAULT_EDITOR_CONTENT = {
     {
       type: "heading",
       attrs: { level: 3 },
-      content: [{ type: "text", text: "Features" }],
+      content: [{ type: "text", text: "Sample research based on indexed reports" }],
     },
     {
       type: "orderedList",
@@ -29,7 +29,7 @@ const DEFAULT_EDITOR_CONTENT = {
           content: [
             {
               type: "paragraph",
-              content: [{ type: "text", text: "Slash menu & bubble menu" }],
+              content: [{ type: "text", text: "The overall fintech market opportunity in India is estimated at $584B and is expected to reach $2T by 2030, growing at a compounded annual growth rate (CAGR) of 18% from 2022 to 2030." }],
             },
           ],
         },
@@ -39,12 +39,7 @@ const DEFAULT_EDITOR_CONTENT = {
             {
               type: "paragraph",
               content: [
-                { type: "text", text: "AI autocomplete (type " },
-                { type: "text", marks: [{ type: "code" }], text: "++" },
-                {
-                  type: "text",
-                  text: " to activate, or select from slash menu)",
-                },
+                { type: "text", text: "The growth of fintech in India is driven by factors such as the rise in informal employment, increasing per capita income, expanding internet user base (930M today to 1.3B by 2030), and significant venture capital flow. " },
               ],
             },
           ],
@@ -57,7 +52,7 @@ const DEFAULT_EDITOR_CONTENT = {
               content: [
                 {
                   type: "text",
-                  text: "Image uploads (drag & drop / copy & paste, or select from slash menu)",
+                  text: "India has seen a significant rise in fintech investment, with about $35 billion invested across segments thus far, more than doubling India’s share of global fintech funding since 2016.",
                 },
               ],
             },

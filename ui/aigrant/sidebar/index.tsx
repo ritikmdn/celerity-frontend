@@ -6,6 +6,7 @@ import { TiptapExtensions } from "./extensions";
 import {
   File,
   Plus,
+  X,
 } from "lucide-react";
 
 // Define a custom FileData type
@@ -80,7 +81,7 @@ export default function DisplayBox() {
                 {file.name.length > 25 ? file.name.substring(0, 25) + '...' : file.name}
               </a>
             </div>
-            {/* <X className="cursor-pointer hover:text-red-500 h-4 w-4" onClick={() => handleFileRemove(index)} /> */}
+            <X className="cursor-pointer hover:text-red-500 h-4 w-4" />
           </li>
         ))}
       </ul>
