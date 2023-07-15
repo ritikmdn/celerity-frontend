@@ -22,7 +22,6 @@ export const SenseCheckSelector: FC<SenseCheckSelectorProps> = ({
   // use debounce for setting completion
   const debouncedSetCompletion = useDebouncedCallback((apicompletion) => {
     setCompletion(apicompletion);
-    console.log('onFinish (debounced):', apicompletion);
   }, 500);
 
   const { complete, isLoading } = useCompletion({
@@ -38,7 +37,6 @@ export const SenseCheckSelector: FC<SenseCheckSelectorProps> = ({
     },
     onFinish: (_prompt, apicompletion) => {
       if (apicompletion !== "") {
-        console.log('onFinish:', apicompletion);
         debouncedSetCompletion(apicompletion);
       }
     },         
@@ -52,7 +50,22 @@ export const SenseCheckSelector: FC<SenseCheckSelectorProps> = ({
       className="relative flex items-center justify-center p-2 text-sm font-medium text-stone-600 hover:bg-stone-100 active:bg-stone-200"
       onMouseDown={(e) => {
         e.preventDefault();
-        complete(editor.getText());
+        if (!editor) {
+          console.error("Editor doesn't exist");
+          return;
+        }
+      
+        let selectedText = '';
+      
+        if (editor.state.selection.empty) {
+          console.error("No text selected");
+          return;
+        } else {
+          const { from, to } = editor.state.selection;
+          selectedText = editor.state.doc.textBetween(from, to);
+        }
+        console.log("selectedText:", selectedText);
+        complete(selectedText);
       }}
     >
       <Magic className="w-5 h-5" />
