@@ -16,6 +16,15 @@ const DEFAULT_EDITOR_CONTENT = {
       ],
     },
     {
+      type: "paragraph",
+      content: [
+        {
+          type: "text",
+          text: "Highlight the text that you'd like to sense check.",
+        }
+      ],
+    },
+    {
       type: "heading",
       attrs: { level: 3 },
       content: [{ type: "text", text: "Sample research based on indexed reports" }],
