@@ -85,12 +85,12 @@ export async function POST(req: Request): Promise<Response> {
 
     return getMatchesFromEmbeddings(inquiry, client, topK)
       .then((matches) => {
-        console.log(matches);
+        // console.log(matches);
         let vector_response = matches[0]['0']['pageContent'] + "\n" + matches[1]['0']['pageContent'] ;
 
         content = "Here's the highlighted text you need to proofread:" + "\n" + content + "\n Here's the context for source of truth: \n" + vector_response + "\n\n  There is something incorrect with the provided text. Which quantitative data and qualitative reasoning is different from the source of turth?";
 
-        console.log(content);
+        // console.log(content);
 
         return openai.createChatCompletion({
           model: "gpt-3.5-turbo-16k-0613",

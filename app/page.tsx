@@ -4,7 +4,7 @@ import React from 'react'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import LogoSVG from './login/logo'
+import LogoSVG from './logo'
 // import Link from 'next/link'
 
 export default function Login() {
@@ -32,7 +32,7 @@ export default function Login() {
       email,
       password,
     })
-    router.push('/proof-of-concept')
+    router.push('/home')
     router.refresh()
   }
 

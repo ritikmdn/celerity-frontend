@@ -1,26 +1,25 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import { TiptapExtensions } from "./extensions";
-// import { Plus, FilePdf, X } from "react-feather"; // Import icons from Feather Icons
-import {
-  Plus,
-  File,
-  X,
-  Image as ImageIcon,
-} from "lucide-react";
+import { Folders, X, PlusSquare, ToyBrick, File, CheckCircle, BoxSelect } from "lucide-react";
 
 export default function DisplayBox() {
-  const [content, setContent] = useState(null); // set initial content to null
+  const [content, setContent] = useState(null);
   const [files, setFiles] = useState<File[]>([]);
   const [indexStatus, setIndexStatus] = useState("");
   const [hydrated, setHydrated] = useState(false);
+  const [sidebarState, setSidebarState] = useState<'closed' | 'files' | 'plugins'>('closed');
+  const [plugins, setPlugins] = useState<{name: string, checked: boolean}[]>([
+    {name: "Our world in data", checked: false},
+    {name: "IMF", checked: false}
+  ]);
 
   const editor = useEditor({
     extensions: TiptapExtensions,
-    editable: false, // Make the editor read-only
-    autofocus: false, // Don't focus the editor on load
+    editable: false,
+    autofocus: false,
   });
 
   // Handle file input change
@@ -34,8 +33,17 @@ export default function DisplayBox() {
     setFiles((prevFiles) => prevFiles.filter((file, index) => index !== removeIndex));
   };
 
-   // Hydrate the display box with the content from API.
-   useEffect(() => {
+  // Handle checkbox click
+  const handleCheckboxClick = (index: number) => {
+    setPlugins(prevPlugins => {
+      const newPlugins = [...prevPlugins];
+      newPlugins[index].checked = !newPlugins[index].checked;
+      return newPlugins;
+    });
+  };
+
+  // Hydrate the display box with the content from API.
+  useEffect(() => {
     if (editor && content && !hydrated) {
       editor.commands.setContent(content);
       setHydrated(true);
@@ -54,30 +62,61 @@ export default function DisplayBox() {
   }, []);
 
   return (
-    <div className="relative h-[87.5vh] w-[22.5%] border-stone-200 p-12 px-8 sm:mb-[calc(20vh)] sm:rounded-lg sm:border sm:px-4 sm:shadow-lg">
-      {/* Add a file button */}
-      <div className="absolute right-5 top-5 mb-5 rounded-lg bg-stone-100 px-2 py-1 text-sm text-stone-400">
-        {indexStatus}
+    <div className="sticky top-0 left-0 h-screen w-auto bg-white border-r border-gray-200 p-4 flex">
+      {/* Icons */}
+      <div className="flex flex-col space-y-6 items-center">
+        <button onClick={() => setSidebarState(sidebarState === 'files' ? 'closed' : 'files')}>
+          <Folders className="h-6 w-6" color={sidebarState === 'files' ? 'red' : 'gray'} />
+        </button>
+        <button onClick={() => setSidebarState(sidebarState === 'plugins' ? 'closed' : 'plugins')}>
+          <ToyBrick className="h-6 w-6" color={sidebarState === 'plugins' ? 'red' : 'gray'} />
+        </button>
       </div>
-      <label className="flex text-stone-400 items-center space-x-2 cursor-pointer">
-        <Plus /> <span>Add a file</span>
-        <input type="file" accept=".pdf" onChange={handleFileChange} className="hidden" />
-      </label>
-
-      {/* Display list of files */}
-      <ul className="space-y-2 mt-4">
-        {files.map((file, index) => (
-          <li key={file.name + index} className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <File />
-              <span className="truncate" title={file.name}>
-                {file.name.length > 25 ? file.name.substring(0, 25) + '...' : file.name}
-              </span>
-            </div>
-            <X className="cursor-pointer hover:text-red-500 h-4 w-4" onClick={() => handleFileRemove(index)} />
-          </li>
-        ))}
-      </ul>
+  
+      {/* Sidebar Contents */}
+      {sidebarState === 'files' && (
+        <div className="ml-8 mr-4 px-2">
+          <h2 className="text-lg font-semibold mb-2 whitespace-nowrap">Internal data</h2> {/* Added heading */}
+          {/* Add a file button */}
+          <div className="w-min mb-4 rounded-lg bg-stone-100 px-2 py-1 text-sm text-stone-400">
+            {indexStatus}
+          </div>
+          <label className="flex text-stone-400 items-left space-x-2 cursor-pointer text-sm">
+            <PlusSquare className="h-4 w-4" /> <span className="whitespace-nowrap">Add a file</span>
+            <input type="file" accept=".pdf" onChange={handleFileChange} className="hidden" />
+          </label>
+  
+          {/* Display list of files */}
+          <ul className="space-y-2 mt-4">
+            {files.map((file, index) => (
+              <li key={file.name + index} className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <File className="h-5 w-5" />
+                  <span title={file.name} className="whitespace-nowrap">
+                    {file.name.length > 20 ? file.name.substring(0, 20) + '...' : file.name}
+                  </span>
+                </div>
+                <X className="cursor-pointer text-gray-400 hover:text-red-500 h-4 w-4" onClick={() => handleFileRemove(index)} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {sidebarState === 'plugins' && (
+        <div className="ml-8 mr-4 px-2">
+          <h2 className="text-lg font-semibold mb-2">External plugins</h2> {/* Added heading */}
+          <ul className="space-y-2 mt-4">
+            {plugins.map((plugin, index) => (
+              <li key={plugin.name} className="flex whitespace-nowrap items-left  cursor-pointer" onClick={() => handleCheckboxClick(index)}>
+                {plugin.checked ? <CheckCircle className="h-5 w-5" color="black" /> : <BoxSelect className="h-5 w-5" color="grey" />}
+                <span className="ml-2 align-middle" style={{ color: plugin.checked ? "black" : "grey" }}>
+                  {plugin.name}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
-);
+  );  
 }

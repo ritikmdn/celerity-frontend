@@ -1,19 +1,29 @@
 import { Editor } from "@tiptap/core";
 import { FC, useState } from "react";
+import { useEffect, useRef, useContext } from "react";
 import { useCompletion } from "ai/react";
 import { toast } from "sonner";
 import va from "@vercel/analytics";
 import LoadingCircle from "@/ui/shared/loading-circle";
-import { Minimize } from "lucide-react";
 import Magic from "@/ui/shared/magic";
+import CompletionContext from '@/ui/shared/context';
+import { useDebouncedCallback } from "use-debounce"; // import useDebouncedCallback
 
 interface SenseCheckSelectorProps {
   editor: Editor;
-  isOpen: boolean;
-  setIsOpen: () => void;
 }
 
-export const SenseCheckSelector = ({ editor }) => {
+export const SenseCheckSelector: FC<SenseCheckSelectorProps> = ({
+  editor,
+}) => {
+
+  const { completion, setCompletion } = useContext(CompletionContext)!; // access CompletionContext
+
+  // use debounce for setting completion
+  const debouncedSetCompletion = useDebouncedCallback((apicompletion) => {
+    setCompletion(apicompletion);
+  }, 500);
+
   const { complete, isLoading } = useCompletion({
     id: "celerity",
     api: "/api/generate",
@@ -25,14 +35,11 @@ export const SenseCheckSelector = ({ editor }) => {
       }
       editor.chain().focus().run();
     },
-    onFinish: (_prompt, completion) => {
-      // highlight the generated text
-      const range = editor.state.selection;
-      editor.commands.setTextSelection({
-        from: range.from,
-        to: range.from + completion.length,
-      });
-    },
+    onFinish: (_prompt, apicompletion) => {
+      if (apicompletion !== "") {
+        debouncedSetCompletion(apicompletion);
+      }
+    },         
     onError: () => {
       toast.error("Something went wrong.");
     },
@@ -43,7 +50,22 @@ export const SenseCheckSelector = ({ editor }) => {
       className="relative flex items-center justify-center p-2 text-sm font-medium text-stone-600 hover:bg-stone-100 active:bg-stone-200"
       onMouseDown={(e) => {
         e.preventDefault();
-        complete(editor.getText());
+        if (!editor) {
+          console.error("Editor doesn't exist");
+          return;
+        }
+      
+        let selectedText = '';
+      
+        if (editor.state.selection.empty) {
+          console.error("No text selected");
+          return;
+        } else {
+          const { from, to } = editor.state.selection;
+          selectedText = editor.state.doc.textBetween(from, to);
+        }
+        console.log("selectedText:", selectedText);
+        complete(selectedText);
       }}
     >
       <Magic className="w-5 h-5" />
