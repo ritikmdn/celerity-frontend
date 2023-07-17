@@ -62,7 +62,7 @@ export default function DisplayBox() {
   }, []);
 
   return (
-    <div className="sticky top-0 left-0 h-screen w-auto bg-white border-r border-gray-200 p-4 flex">
+    <div className="sticky top-0 left-0 h-[100%] w-auto bg-white border-r border-gray-200 p-4 flex">
       {/* Icons */}
       <div className="flex flex-col space-y-6 items-center">
         <button onClick={() => setSidebarState(sidebarState === 'files' ? 'closed' : 'files')}>
@@ -87,7 +87,7 @@ export default function DisplayBox() {
           </label>
   
           {/* Display list of files */}
-          <ul className="space-y-2 mt-4">
+          <ul className="space-y-2 mt-40">
             {files.map((file, index) => (
               <li key={file.name + index} className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">

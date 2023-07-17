@@ -88,7 +88,7 @@ export async function POST(req: Request): Promise<Response> {
         // console.log(matches);
         let vector_response = matches[0]['0']['pageContent'] + "\n" + matches[1]['0']['pageContent'] ;
 
-        content = "Here's the highlighted text you need to proofread:" + "\n" + content + "\n Here's the context for source of truth: \n" + vector_response + "\n\n  There is something incorrect with the provided text. Which quantitative data and qualitative reasoning is different from the source of turth?";
+        content = "Here's the highlighted text you need to proofread:" + "\n" + content + "\n Here's the context for source of truth: \n" + vector_response + "\n\n  There is something incorrect with the provided text. Which quantitative data and qualitative reasoning is different from the source of turth? Give output in markdown format.";
 
         // console.log(content);
 
