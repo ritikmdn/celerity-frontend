@@ -6,19 +6,14 @@ import { createClient } from "@supabase/supabase-js";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { SupabaseVectorStore } from "langchain/vectorstores/supabase";
+import { supabase } from '@/lib/supabase'
 
 const config = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(config);
 
-const privateKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4bnp5Z3RkbHR4ZGR5dG1zeHJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODg4MjE3MTYsImV4cCI6MjAwNDM5NzcxNn0.OBaKO6hXBSPfGqfUrDEfG-uS9t9IoJ-6YK-gIoxjQes';
-if (!privateKey) throw new Error(`Expected env var SUPABASE_PRIVATE_KEY`);
-
-const url = 'https://cxnzygtdltxddytmsxrs.supabase.co';
-if (!url) throw new Error(`Expected env var SUPABASE_URL`);
-
-const client = createClient(url, privateKey);
+const client = supabase;
 
 export const runtime = "edge";
 
@@ -88,7 +83,7 @@ export async function POST(req: Request): Promise<Response> {
         // console.log(matches);
         let vector_response = matches[0]['0']['pageContent'] + "\n" + matches[1]['0']['pageContent'] ;
 
-        content = "Here's the highlighted text you need to proofread:" + "\n" + content + "\n Here's the context for source of truth: \n" + vector_response + "\n\n  There is something incorrect with the provided text. Which quantitative data and qualitative reasoning is different from the source of turth? Give output in markdown format.";
+        content = "Answer the following: \n" + content + "\n Kindly stick to the provided context as the only source of information \n" + "Context: " + vector_response + "\n" + "Format your answer in markdown and use consice points like a management consultant. \n\n Answer:";
 
         // console.log(content);
 
@@ -98,9 +93,9 @@ export async function POST(req: Request): Promise<Response> {
             {
               role: "system",
               content:
-                "You are an AI that critically checks the provided text for qualitative data and quantitative reasoning based on context provided. " +
+                "You are an expert management consultant who is an expert at business research and analysis. " +
                 "Strictly stick to the context provided and do not assume any information outside of it. " +
-                "Limit your response to no more than 300 characters, but make sure to construct complete sentences.",
+                "Limit your response to less than 500 characters, but make sure to construct complete sentences.",
               // we're disabling markdown for now until we can figure out a way to stream markdown text with proper formatting: https://github.com/steven-tey/novel/discussions/7
               // "Use Markdown formatting when appropriate.",
             },

@@ -26,7 +26,7 @@ export const SenseCheckSelector: FC<SenseCheckSelectorProps> = ({
 
   const { complete, isLoading } = useCompletion({
     id: "celerity",
-    api: "/api/generate",
+    api: "/api/proofread",
     onResponse: (response) => {
       if (response.status === 429) {
         toast.error("You have reached your request limit for the day.");
