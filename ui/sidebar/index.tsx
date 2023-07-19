@@ -182,7 +182,7 @@ export default function DisplayBox() {
                   </span>
                 </div>
                 {/* <X className="cursor-pointer text-gray-400 hover:text-red-500 h-4 w-4" onClick={() => handleFileRemove(index)} /> */}
-                <X className="cursor-pointer text-gray-400 hover:text-red-500 h-4 w-4" onClick={() => handleFileRemove(index)} />
+                <X className="cursor-pointer text-gray-400 hover:text-red-500 h-4 w-4"/>
               </li>
             ))}
           </ul>
