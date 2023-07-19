@@ -83,19 +83,28 @@ export async function POST(req: Request): Promise<Response> {
         // console.log(matches);
         let vector_response = matches[0]['0']['pageContent'] + "\n" + matches[1]['0']['pageContent'] ;
 
-        content = "Here's the highlighted text you need to proofread:" + "\n" + content + "\n Here's the context for source of truth: \n" + vector_response + "\n\n  There is something incorrect with the provided text. Which quantitative data and qualitative reasoning is different from the source of turth? Give output in markdown format. Restrict your response to 500 characters.";
+        content = "You role is an expert proofreader that critically checks if the input text is consistent with the context provided. \n" +
+                  "The input text is mentioned within <Input> </Input> and the context is mentioned within <Context> </Context> \n" +
+                  "<Input>" + content + "</Input> \n" +
+                  "<Context>" + vector_response + "</Context> \n" +
+                  "Provide your feedback in the following format: \n" +
+                  "**Feedback**: Your analysis is {consistency} \n\n **Reason**: <Reason> \n \n"
+                  "Kindly ensure the following: \n" +
+                  "The variable {consistency} can either '''consistent''' or '''inconsistent'''. \n" +
+                  "Provide <Reason> only when {consistency}='''inconsistent''' i.e. there is discrepancy in the qualitative data or quantitative reasoning. Additionally also check if the input text makes sense independetly. \n"+
+                  "Limit your response to less than 500 characters in total, but make sure to construct complete sentences."+
+                  "Use Markdown formatting when appropriate. \n"+
+                  "Be concise.";
 
         // console.log(content);
 
         return openai.createChatCompletion({
-          model: "gpt-3.5-turbo-16k-0613",
+          model: "gpt-3.5-turbo",
           messages: [
             {
               role: "system",
               content:
-                "You are an AI that critically checks the provided text for qualitative data and quantitative reasoning based on context provided. " +
-                "Strictly stick to the context provided and do not assume any information outside of it. " +
-                "Limit your response to no more than 300 characters, but make sure to construct complete sentences.",
+                "You are a helpful AI assistant that diligently helps the user with their task. "
               // we're disabling markdown for now until we can figure out a way to stream markdown text with proper formatting: https://github.com/steven-tey/novel/discussions/7
               // "Use Markdown formatting when appropriate.",
             },

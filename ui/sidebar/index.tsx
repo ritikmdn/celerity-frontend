@@ -6,6 +6,7 @@ import { TiptapExtensions } from "./extensions";
 import { Folders, X, PlusSquare, ToyBrick, File, CheckCircle, BoxSelect } from "lucide-react";
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from "@/lib/supabase";
+import Image from 'next/image';
 
 type CustomFileObject = {
   name: string;
@@ -19,8 +20,8 @@ export default function DisplayBox() {
   const [hydrated, setHydrated] = useState(false);
   const [sidebarState, setSidebarState] = useState<'closed' | 'files' | 'plugins'>('closed');
   const [plugins, setPlugins] = useState<{name: string, checked: boolean}[]>([
-    {name: "Our world in data", checked: false},
-    {name: "IMF", checked: false}
+    {name: "Our World in Data", checked: false},
+    {name: "International Monetary Fund", checked: false}
   ]);
 
   const handleFileChange = async (e) => {
@@ -167,7 +168,7 @@ export default function DisplayBox() {
           </div>
           <label className="flex text-stone-400 items-left space-x-2 cursor-pointer text-sm">
             <PlusSquare className="h-4 w-4" /> <span className="whitespace-nowrap">Add a file</span>
-            <input type="file" accept=".pdf" onChange={handleFileChange} className="hidden" />
+            {/* <input type="file" accept=".pdf" onChange={handleFileChange} className="hidden" /> */}
           </label>
   
           {/* Display list of files */}
@@ -177,9 +178,10 @@ export default function DisplayBox() {
                 <div className="flex items-center space-x-2">
                   <File className="h-5 w-5" />
                   <span className="whitespace-nowrap">
-                    {file.name.length > 20 ? file.name.substring(0, 20) + '...' : file.name}
+                    {file.name.length > 25 ? file.name.substring(0, 25) + '...' : file.name}
                   </span>
                 </div>
+                {/* <X className="cursor-pointer text-gray-400 hover:text-red-500 h-4 w-4" onClick={() => handleFileRemove(index)} /> */}
                 <X className="cursor-pointer text-gray-400 hover:text-red-500 h-4 w-4" onClick={() => handleFileRemove(index)} />
               </li>
             ))}
@@ -192,8 +194,18 @@ export default function DisplayBox() {
           <ul className="space-y-2 mt-4">
             {plugins.map((plugin, index) => (
               <li key={plugin.name} className="flex whitespace-nowrap items-left  cursor-pointer" onClick={() => handleCheckboxClick(index)}>
-                {plugin.checked ? <CheckCircle className="h-5 w-5" color="black" /> : <BoxSelect className="h-5 w-5" color="grey" />}
-                <span className="ml-2 align-middle" style={{ color: plugin.checked ? "black" : "grey" }}>
+                {/* {plugin.checked ? <CheckCircle className="h-5 w-5" color="black" /> : <BoxSelect className="h-5 w-5" color="gray" />} */}
+                <BoxSelect className="h-5 w-5" color="gray" />
+                <div className="ml-2" style={{ width: '24px' }}>
+                  <Image 
+                    src={plugin.name === "Our World in Data" ? "/owid.png" : "/imf.png"} 
+                    alt={`${plugin.name} Logo`}
+                    height={24}
+                    width={24}
+                  />
+                </div>
+                {/* <span className="ml-2 align-middle" style={{ color: plugin.checked ? "black" : "gray" }}> */}
+                <span className="ml-2 align-middle" style={{ color: "gray" }}>
                   {plugin.name}
                 </span>
               </li>
