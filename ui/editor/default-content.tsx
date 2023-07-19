@@ -24,7 +24,11 @@ const DEFAULT_EDITOR_CONTENT = {
           content: [
             {
               type: "paragraph",
-              content: [{ type: "text", text: "Sense check: Highlight the text that you want to proofread, and the assistant will check for conflicts and errors against your data sources" }],
+              content: [
+                { type: "text", text: "Sense check: " },
+                { type: "text", marks: [{ type: "code" }], text:  "Highlight the text that you want to sense check" },
+                { type: "text", text: ", and the assistant will check for conflicts and errors against your data sources" },
+            ],
             },
           ],
         },
