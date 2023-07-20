@@ -49,9 +49,9 @@ export async function POST(req: Request): Promise<Response> {
 
     // remove trailing slash,
     // slice the content from the end to prioritize later characters
-    content = content.replace(/\/$/, "").slice(-2000);
+    content = content.replace(/\/$/, "");
     const inquiry = content;
-    const topK = 2; // Specify the number of top matches you want
+    const topK = 3; // Specify the number of top matches you want
 
     const getMatchesFromEmbeddings = async (
       inquiry: string,
@@ -62,7 +62,8 @@ export async function POST(req: Request): Promise<Response> {
   
       const store = new SupabaseVectorStore(embeddings, {
         client,
-        tableName: "documents",
+        tableName: "demo_documents",
+        queryName: "match_demo_documents",
       });
       try {
         const queryResult = await store.similaritySearchWithScore(inquiry, topK);
@@ -82,38 +83,31 @@ export async function POST(req: Request): Promise<Response> {
         // console.log(matches);
         let vector_response = matches[0]['0']['pageContent'] + "\n" + matches[1]['0']['pageContent'] ;
 
-        content = "You role is an expert proofreader that critically checks if the input text is consistent with the context provided. \n" +
-                  "The input text is mentioned within <Input> </Input> and the context is mentioned within <Context> </Context> \n" +
-                  "<Input>" + content + "</Input> \n" +
-                  "<Context>" + vector_response + "</Context> \n" +
-                  "Provide your feedback in the following format: \n" +
-                  "**Feedback**: Your analysis is {consistency} \n\n **Reason**: <Reason> \n \n"
-                  "Kindly ensure the following: \n" +
-                  "The variable {consistency} can either '''consistent''' or '''inconsistent'''. \n" +
-                  "Provide <Reason> only when {consistency}='''inconsistent''' i.e. there is discrepancy in the qualitative data or quantitative reasoning. Additionally also check if the input text makes sense independetly. \n"+
-                  "Limit your response to less than 500 characters in total, but make sure to construct complete sentences."+
-                  "Use Markdown formatting when appropriate. \n"+
-                  "Be concise.";
+        content = "Task: Check conflict between input and the truth. Give concise answer and mention the specifics. \n" +
+                  "Input: " + content + "\n" +
+                  "Truth: " + vector_response + "\n" +
+                  "The desired output format is: \n" +
+                  "'''**Feedback**: \n \n" +
+                  "'''**Reason**: \n" +
+                  "Restrict feedback to one sentence. Restrict reason to two sentences. \n";
 
-        // console.log(content);
+        console.log("Input prompt:", content);
 
         return openai.createChatCompletion({
-          model: "gpt-3.5-turbo",
+          model: "gpt-3.5-turbo-16k-0613",
           messages: [
             {
               role: "system",
               content:
-                "You are a helpful AI assistant that diligently helps the user with their task. "
-              // we're disabling markdown for now until we can figure out a way to stream markdown text with proper formatting: https://github.com/steven-tey/novel/discussions/7
-              // "Use Markdown formatting when appropriate.",
+                " You are a helpful AI assistant that helps the user with the requested task. "
             },
             {
               role: "user",
               content,
             },
           ],
-          temperature: 1,
-          top_p: 1,
+          temperature: 0.2,
+          top_p: 0.1,
           frequency_penalty: 0,
           presence_penalty: 0,
           stream: true,

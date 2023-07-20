@@ -7,6 +7,7 @@ import { Folders, X, PlusSquare, ToyBrick, File, CheckCircle, BoxSelect } from "
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from "@/lib/supabase";
 import Image from 'next/image';
+import { toast } from "sonner";
 
 type CustomFileObject = {
   name: string;
@@ -29,6 +30,7 @@ export default function DisplayBox() {
     const file = fileList[0] as File; // Assuming only one file is selected
     const id = uuidv4();
     const path = `demo/${file.name}`;
+    // const path = `${file.name}`;
 
     setIndexStatus("Uploading...");
 
@@ -51,6 +53,9 @@ export default function DisplayBox() {
 
     setFiles((prevFiles) => [...prevFiles, ...fileList] as File[]);
     setIndexStatus("Uploaded"); // set status to "Indexed" after the file upload is completed
+
+    // Show success toast notification
+    toast.success('It may take upto 1 minute for the change to reflect in AI.');
 
   };
 
@@ -90,6 +95,9 @@ export default function DisplayBox() {
     // Remove the file from the state
     setFiles((prevFiles) => prevFiles.filter((file, index) => index !== removeIndex));
     setIndexStatus("Deleted");
+
+    // Show success toast notification
+    toast.success('It may take upto 1 minute for the change to reflect in AI.');
   };
 
 
@@ -168,7 +176,7 @@ export default function DisplayBox() {
           </div>
           <label className="flex text-stone-400 items-left space-x-2 cursor-pointer text-sm">
             <PlusSquare className="h-4 w-4" /> <span className="whitespace-nowrap">Add a file</span>
-            {/* <input type="file" accept=".pdf" onChange={handleFileChange} className="hidden" /> */}
+            <input type="file" accept=".pdf" onChange={handleFileChange} className="hidden" />
           </label>
   
           {/* Display list of files */}
@@ -181,8 +189,8 @@ export default function DisplayBox() {
                     {file.name.length > 25 ? file.name.substring(0, 25) + '...' : file.name}
                   </span>
                 </div>
-                {/* <X className="cursor-pointer text-gray-400 hover:text-red-500 h-4 w-4" onClick={() => handleFileRemove(index)} /> */}
-                <X className="cursor-pointer text-gray-400 hover:text-red-500 h-4 w-4"/>
+                <X className="cursor-pointer text-gray-400 hover:text-red-500 h-4 w-4" onClick={() => handleFileRemove(index)} />
+                {/* <X className="cursor-pointer text-gray-400 hover:text-red-500 h-4 w-4"/> */}
               </li>
             ))}
           </ul>

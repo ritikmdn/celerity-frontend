@@ -49,9 +49,9 @@ export async function POST(req: Request): Promise<Response> {
 
     // remove trailing slash,
     // slice the content from the end to prioritize later characters
-    content = content.replace(/\/$/, "").slice(-2000);
+    content = content.replace(/\/$/, "");
     const inquiry = content;
-    const topK = 2; // Specify the number of top matches you want
+    const topK = 3; // Specify the number of top matches you want
 
     const getMatchesFromEmbeddings = async (
       inquiry: string,
@@ -62,7 +62,8 @@ export async function POST(req: Request): Promise<Response> {
   
       const store = new SupabaseVectorStore(embeddings, {
         client,
-        tableName: "documents",
+        tableName: "demo_documents",
+        queryName: "match_demo_documents",
       });
       try {
         const queryResult = await store.similaritySearchWithScore(inquiry, topK);
@@ -82,7 +83,10 @@ export async function POST(req: Request): Promise<Response> {
         // console.log(matches);
         let vector_response = matches[0]['0']['pageContent'] + "\n" + matches[1]['0']['pageContent'] ;
 
-        content = "Answer the following: \n" + content + "\n Kindly stick to the provided context as the only source of information \n" + "Context: " + vector_response + "\n" + "Format your answer in markdown and use consice points like a management consultant. \n\n Answer:";
+        content = "Answer the following question: \n" + content + 
+                  "\n Kindly stick to the context below as the only source of information \n" + 
+                  "Context: " + vector_response + "\n" + 
+                  "Give concise answer. Limit to 4-5 senstences. Start each sentent in a new line. \n";
 
         // console.log(content);
 
@@ -92,9 +96,7 @@ export async function POST(req: Request): Promise<Response> {
             {
               role: "system",
               content:
-                "You are an expert management consultant who is an expert at business research and analysis. " +
-                "Strictly stick to the context provided and do not assume any information outside of it. " +
-                "Limit your response to less than 500 characters, but make sure to construct complete sentences.",
+                "You are a helpful AI assistant that helps the user with their request. "
               // we're disabling markdown for now until we can figure out a way to stream markdown text with proper formatting: https://github.com/steven-tey/novel/discussions/7
               // "Use Markdown formatting when appropriate.",
             },
