@@ -50,7 +50,7 @@ const DEFAULT_EDITOR_CONTENT = {
       content: [
         {
           type: "text",
-          text: "You can ingest internal data as pdfs to the workbench from the sidebar. Additionally, you can use external sources - demography data from Our World in Data & economic data from IMF for India.",
+          text: "You can ingest internal data as pdfs to the workbench from the sidebar.\n[Coming soon] Additionally, you can use external sources - demography data from Our World in Data & economic data from IMF for India.",
         }
       ],
     },
